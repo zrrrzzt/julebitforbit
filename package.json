@@ -1,0 +1,39 @@
+{
+  "name": "julebitforbit",
+  "version": "1.0.0",
+  "description": "Julekonkurranse i bit for bit ånd",
+  "main": "index.js",
+  "scripts": {
+    "build": "next build",
+    "dev": "next",
+    "start": "next start",
+    "test": "standard && nsp check && ava",
+    "test-offline": "standard && ava",
+    "coverage": "nyc ava",
+    "coveralls": "nyc ava && nyc report --reporter=lcov && cat coverage/lcov.info | coveralls",
+    "standard-fix": "standard --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zrrrzzt/julebitforbit.git"
+  },
+  "keywords": [],
+  "author": "Geir Gåsodden <geir.gasodden@pythonia.no> (https://github.com/zrrrzzt)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zrrrzzt/julebitforbit/issues"
+  },
+  "homepage": "https://github.com/zrrrzzt/julebitforbit#readme",
+  "devDependencies": {
+    "ava": "0.24.0",
+    "coveralls": "3.0.0",
+    "nsp": "3.1.0",
+    "nyc": "11.3.0",
+    "standard": "10.0.3"
+  },
+  "dependencies": {
+    "next": "4.2.1",
+    "react": "16.2.0",
+    "react-dom": "16.2.0"
+  }
+}
