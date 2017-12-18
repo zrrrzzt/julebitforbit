@@ -1,13 +1,12 @@
-export default () => (
-  <div className='cell'>
+export default (props) => (
+  <div className='cell' {...props}>
     <style jsx>
       {`
         .cell {
-          color: red;
-          font-size: 12px;
-          width: 100%;
-          height: 50px;
-          text-align: center;
+          background: red;
+        }
+        .clear {
+          background: transparent;
         }
       `}
     </style>
