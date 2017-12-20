@@ -7,6 +7,8 @@
     "build": "next build",
     "dev": "next",
     "start": "next start",
+    "export": "next build && next export",
+    "deploy": "npm test && next build && next export && now --static out/ --name bitforbit && now alias",
     "test": "standard && nsp check && ava",
     "test-offline": "standard && ava",
     "coverage": "nyc ava",
@@ -32,8 +34,12 @@
     "standard": "10.0.3"
   },
   "dependencies": {
+    "knuth-shuffle": "1.0.8",
     "next": "4.2.1",
     "react": "16.2.0",
     "react-dom": "16.2.0"
+  },
+  "now": {
+    "alias": "bitforbit.allthethings.win"
   }
 }
