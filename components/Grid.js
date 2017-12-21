@@ -3,43 +3,59 @@ import Button from './Button'
 import Cell from './Cell'
 const shuffle = require('knuth-shuffle').knuthShuffle
 
+function reset () {
+  const blocks = Array.apply(null, {length: 25}).map(Number.call, Number)
+  const cells = shuffle(blocks.slice(0))
+  return {
+    blocks: blocks,
+    cells: cells,
+    clears: [],
+    isPlaying: false
+  }
+}
+
 export default class Status extends React.Component {
   constructor (props) {
     super(props)
-    const list = Array.apply(null, {length: 25}).map(Number.call, Number)
-    const cells = shuffle(list.slice(0))
-    this.state = {
-      imageUrl: props.imageUrl,
-      list: list,
-      cells: cells,
-      clears: []
-    }
+    this.state = Object.assign({}, {imageUrl: props.imageUrl}, reset())
     this.clearCell = this.clearCell.bind(this)
+    this.togglePlayState = this.togglePlayState.bind(this)
+    this.resetRound = this.resetRound.bind(this)
   }
 
   async componentDidMount () {
     this.timer = setInterval(this.clearCell, 1000)
   }
 
+  resetRound () {
+    this.setState(reset())
+  }
+
   clearCell () {
-    const cells = this.state.cells
-    const clears = this.state.clears
-    const cell = cells.pop()
-    clears.push(cell)
-    this.setState({cells: cells, clears: clears})
+    if (this.state.isPlaying === true) {
+      const cells = this.state.cells
+      const clears = this.state.clears
+      const cell = cells.pop()
+      clears.push(cell)
+      this.setState({cells: cells, clears: clears})
+    }
+  }
+
+  togglePlayState () {
+    const playState = this.state.isPlaying
+    this.setState({isPlaying: playState !== true})
   }
 
   render () {
     return (
       <div>
         <div className='grid'>
-          {this.state.list.map((num, index) => (<Cell key={num} className={this.state.clears.includes(index) ? 'clear' : 'cell'} />))}
+          {this.state.blocks.map((num, index) => (<Cell key={num} className={this.state.clears.includes(index) ? 'clear' : 'cell'} />))}
         </div>
         <div className={'menu'}>
           <Button src={'/static/icons/previous.png'} />
-          <Button src={'/static/icons/replay.png'} />
-          <Button src={'/static/icons/play.png'} />
-          <Button src={'/static/icons/pause.png'} />
+          <Button onClick={this.resetRound} src={'/static/icons/replay.png'} />
+          <Button onClick={this.togglePlayState} src={this.state.isPlaying === true ? '/static/icons/pause.png' : '/static/icons/play.png'} />
           <Button src={'/static/icons/next.png'} />
         </div>
         <style jsx>
