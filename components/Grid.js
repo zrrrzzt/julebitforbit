@@ -14,14 +14,24 @@ function reset () {
   }
 }
 
-export default class Status extends React.Component {
+function getImages () {
+  return [
+    'https://www.telemark.no/var/ezflow_site/storage/images/media/images/folkehelse/nyhetssaker/aarets-frivillighetskommune-2017/205025-1-nor-NO/AArets-frivillighetskommune-2017_responsive_12.jpg',
+    'https://www.telemark.no/var/ezflow_site/storage/images/media/images/aktuelt-nyheter-paa-forsiden/2017/fylkesordfoerer-sven-tore-loekslid-og-vei-i-vellinga/205184-1-nor-NO/Fylkesordfoerer-Sven-Tore-Loekslid-og-Vei-i-vellinga_responsive_12.jpg'
+  ]
+}
+
+export default class Grid extends React.Component {
   constructor (props) {
     super(props)
-    this.state = Object.assign({}, {imageUrl: props.imageUrl}, reset())
+    const images = getImages()
+    this.state = (Object.assign({}, {images: images, nowShowing: 0, lastImage: images.length - 1, imageUrl: images[0]}, reset()))
     this.clearCell = this.clearCell.bind(this)
     this.togglePlayState = this.togglePlayState.bind(this)
     this.resetRound = this.resetRound.bind(this)
     this.fastForward = this.fastForward.bind(this)
+    this.nextImage = this.nextImage.bind(this)
+    this.prevImage = this.prevImage.bind(this)
   }
 
   async componentDidMount () {
@@ -56,6 +66,26 @@ export default class Status extends React.Component {
     this.setState({isPlaying: true})
   }
 
+  nextImage () {
+    const images = this.state.images
+    const nowShowing = this.state.nowShowing
+    const newNum = nowShowing + 1
+    const imageUrl = images[newNum]
+    clearInterval(this.timer)
+    this.timer = setInterval(this.clearCell, 1000)
+    this.setState(Object.assign({nowShowing: newNum, imageUrl: imageUrl}, reset()))
+  }
+
+  prevImage () {
+    const images = this.state.images
+    const nowShowing = this.state.nowShowing
+    const newNum = nowShowing - 1
+    const imageUrl = images[newNum]
+    clearInterval(this.timer)
+    this.timer = setInterval(this.clearCell, 1000)
+    this.setState(Object.assign({nowShowing: newNum, imageUrl: imageUrl}, reset()))
+  }
+
   render () {
     return (
       <div>
@@ -63,11 +93,11 @@ export default class Status extends React.Component {
           {this.state.blocks.map((num, index) => (<Cell key={num} className={this.state.clears.includes(index) ? 'clear' : 'cell'} />))}
         </div>
         <div className={'menu'}>
-          <Button src={'/static/icons/previous.png'} />
+          {this.state.nowShowing > 0 ? <Button onClick={this.prevImage} src={'/static/icons/previous.png'} /> : null}
           <Button onClick={this.resetRound} src={'/static/icons/replay.png'} />
           <Button onClick={this.togglePlayState} src={this.state.isPlaying === true ? '/static/icons/pause.png' : '/static/icons/play.png'} />
           <Button onClick={this.fastForward} src={'/static/icons/fast_forward.png'} />
-          <Button src={'/static/icons/next.png'} />
+          {this.state.nowShowing < this.state.lastImage ? <Button onClick={this.nextImage} src={'/static/icons/next.png'} /> : null}
         </div>
         <style jsx>
           {`
