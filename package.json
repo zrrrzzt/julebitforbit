@@ -8,7 +8,7 @@
     "dev": "next",
     "start": "next start",
     "export": "next build && next export",
-    "deploy": "npm test && next build && next export && now --static out/ --name bitforbit && now alias",
+    "deploy": "npm test && next build && next export && now --static out/ --name julebitforbit && now alias",
     "test": "standard && nsp check && ava",
     "test-offline": "standard && ava",
     "coverage": "nyc ava",

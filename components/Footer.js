@@ -1,8 +1,5 @@
 export default () => (
   <footer className='footer'>
-    <div>
-      Her kjem menyen
-    </div>
     <style jsx>
       {`
         .footer {

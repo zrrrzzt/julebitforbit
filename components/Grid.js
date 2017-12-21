@@ -1,4 +1,5 @@
 import React from 'react'
+import Button from './Button'
 import Cell from './Cell'
 const shuffle = require('knuth-shuffle').knuthShuffle
 
@@ -30,8 +31,17 @@ export default class Status extends React.Component {
 
   render () {
     return (
-      <div className='grid'>
-        {this.state.list.map((num, index) => (<Cell key={num} className={this.state.clears.includes(index) ? 'clear' : 'cell'} />))}
+      <div>
+        <div className='grid'>
+          {this.state.list.map((num, index) => (<Cell key={num} className={this.state.clears.includes(index) ? 'clear' : 'cell'} />))}
+        </div>
+        <div className={'menu'}>
+          <Button src={'/static/icons/previous.png'} />
+          <Button src={'/static/icons/replay.png'} />
+          <Button src={'/static/icons/play.png'} />
+          <Button src={'/static/icons/pause.png'} />
+          <Button src={'/static/icons/next.png'} />
+        </div>
         <style jsx>
           {`
             .grid {
@@ -44,6 +54,11 @@ export default class Status extends React.Component {
               color: red;
               font-size: 12px;
               text-align: center;
+            }
+            .menu {
+              display: flex;
+              align-items: center;
+              justify-content: center;
             }
           `}
         </style>
