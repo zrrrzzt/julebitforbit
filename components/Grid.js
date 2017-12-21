@@ -21,13 +21,17 @@ export default class Status extends React.Component {
     this.clearCell = this.clearCell.bind(this)
     this.togglePlayState = this.togglePlayState.bind(this)
     this.resetRound = this.resetRound.bind(this)
+    this.fastForward = this.fastForward.bind(this)
   }
 
   async componentDidMount () {
+    clearInterval(this.timer)
     this.timer = setInterval(this.clearCell, 1000)
   }
 
   resetRound () {
+    clearInterval(this.timer)
+    this.timer = setInterval(this.clearCell, 1000)
     this.setState(reset())
   }
 
@@ -46,6 +50,12 @@ export default class Status extends React.Component {
     this.setState({isPlaying: playState !== true})
   }
 
+  fastForward () {
+    clearInterval(this.timer)
+    this.timer = setInterval(this.clearCell, 100)
+    this.setState({isPlaying: true})
+  }
+
   render () {
     return (
       <div>
@@ -56,6 +66,7 @@ export default class Status extends React.Component {
           <Button src={'/static/icons/previous.png'} />
           <Button onClick={this.resetRound} src={'/static/icons/replay.png'} />
           <Button onClick={this.togglePlayState} src={this.state.isPlaying === true ? '/static/icons/pause.png' : '/static/icons/play.png'} />
+          <Button onClick={this.fastForward} src={'/static/icons/fast_forward.png'} />
           <Button src={'/static/icons/next.png'} />
         </div>
         <style jsx>
