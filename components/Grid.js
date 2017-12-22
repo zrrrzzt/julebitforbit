@@ -1,5 +1,6 @@
 import React from 'react'
 import Fullscreen from 'react-full-screen'
+import KeyHandler, {KEYPRESS} from 'react-key-handler'
 import Button from './Button'
 import Cell from './Cell'
 const shuffle = require('knuth-shuffle').knuthShuffle
@@ -96,6 +97,12 @@ export default class Grid extends React.Component {
   render () {
     return (
       <Fullscreen enabled={this.state.isFull} onChange={isFull => this.setState({isFull})}>
+        <KeyHandler keyEventName={KEYPRESS} keyValue='f' onKeyHandle={this.toggleFullscreen} />
+        <KeyHandler keyEventName={KEYPRESS} keyValue='p' onKeyHandle={this.togglePlayState} />
+        <KeyHandler keyEventName={KEYPRESS} keyValue='r' onKeyHandle={this.resetRound} />
+        <KeyHandler keyEventName={KEYPRESS} keyValue='n' onKeyHandle={this.nextImage} />
+        <KeyHandler keyEventName={KEYPRESS} keyValue='l' onKeyHandle={this.prevImage} />
+        <KeyHandler keyEventName={KEYPRESS} keyValue='s' onKeyHandle={this.fastForward} />
         <div className='grid'>
           {this.state.blocks.map((num, index) => (<Cell key={num} className={this.state.clears.includes(index) ? 'clear' : 'cell'} />))}
         </div>
