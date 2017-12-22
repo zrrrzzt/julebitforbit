@@ -19,12 +19,13 @@ export default ({ children }) => (
     <style jsx global>
       {`
         body {
-          background: black;
+          background-color: black;
           color: white;
           font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
           text-align: center;
         }
         .content {
+          background-color: black;
           min-height: calc(100vh - 70px);
         }
       `}

@@ -1,4 +1,5 @@
 import React from 'react'
+import Fullscreen from 'react-full-screen'
 import Button from './Button'
 import Cell from './Cell'
 const shuffle = require('knuth-shuffle').knuthShuffle
@@ -25,9 +26,10 @@ export default class Grid extends React.Component {
   constructor (props) {
     super(props)
     const images = getImages()
-    this.state = (Object.assign({}, {images: images, nowShowing: 0, lastImage: images.length - 1, imageUrl: images[0]}, reset()))
+    this.state = (Object.assign({}, {isFull: false, images: images, nowShowing: 0, lastImage: images.length - 1, imageUrl: images[0]}, reset()))
     this.clearCell = this.clearCell.bind(this)
     this.togglePlayState = this.togglePlayState.bind(this)
+    this.toggleFullscreen = this.toggleFullscreen.bind(this)
     this.resetRound = this.resetRound.bind(this)
     this.fastForward = this.fastForward.bind(this)
     this.nextImage = this.nextImage.bind(this)
@@ -37,6 +39,11 @@ export default class Grid extends React.Component {
   async componentDidMount () {
     clearInterval(this.timer)
     this.timer = setInterval(this.clearCell, 1000)
+  }
+
+  toggleFullscreen () {
+    const isFull = this.state.isFull
+    this.setState({isFull: !isFull})
   }
 
   resetRound () {
@@ -88,11 +95,12 @@ export default class Grid extends React.Component {
 
   render () {
     return (
-      <div>
+      <Fullscreen enabled={this.state.isFull} onChange={isFull => this.setState({isFull})}>
         <div className='grid'>
           {this.state.blocks.map((num, index) => (<Cell key={num} className={this.state.clears.includes(index) ? 'clear' : 'cell'} />))}
         </div>
         <div className={'menu'}>
+          <Button onClick={this.toggleFullscreen} src={this.state.isFull === true ? '/static/icons/fullscreen_exit.png' : '/static/icons/fullscreen.png'} />
           {this.state.nowShowing > 0 ? <Button onClick={this.prevImage} src={'/static/icons/previous.png'} /> : null}
           <Button onClick={this.resetRound} src={'/static/icons/replay.png'} />
           <Button onClick={this.togglePlayState} src={this.state.isPlaying === true ? '/static/icons/pause.png' : '/static/icons/play.png'} />
@@ -113,13 +121,14 @@ export default class Grid extends React.Component {
               text-align: center;
             }
             .menu {
+              background-color: black;
               display: flex;
               align-items: center;
               justify-content: center;
             }
           `}
         </style>
-      </div>
+      </Fullscreen>
     )
   }
 }
