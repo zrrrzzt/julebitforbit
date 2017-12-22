@@ -18,8 +18,8 @@ function reset () {
 
 function getImages () {
   return [
-    'https://www.telemark.no/var/ezflow_site/storage/images/media/images/folkehelse/nyhetssaker/aarets-frivillighetskommune-2017/205025-1-nor-NO/AArets-frivillighetskommune-2017_responsive_12.jpg',
-    'https://www.telemark.no/var/ezflow_site/storage/images/media/images/aktuelt-nyheter-paa-forsiden/2017/fylkesordfoerer-sven-tore-loekslid-og-vei-i-vellinga/205184-1-nor-NO/Fylkesordfoerer-Sven-Tore-Loekslid-og-Vei-i-vellinga_responsive_12.jpg'
+    '/static/images/mistletoe.jpg',
+    '/static/images/donkey.jpg'
   ]
 }
 
