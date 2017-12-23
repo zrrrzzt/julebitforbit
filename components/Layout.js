@@ -17,12 +17,15 @@ export default ({ children }) => (
     { children }
     <Footer />
     <style jsx global>
-      {`
+      {` 
         body {
           background-color: black;
           color: white;
           font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
           text-align: center;
+        }
+        div.fullscreen.fullscreen-enabled {
+          background-color: black !important;
         }
         .content {
           background-color: black;
