@@ -13,7 +13,8 @@
     "test-offline": "standard && ava",
     "coverage": "nyc ava",
     "coveralls": "nyc ava && nyc report --reporter=lcov && cat coverage/lcov.info | coveralls",
-    "standard-fix": "standard --fix"
+    "standard-fix": "standard --fix",
+    "generate-json": "node utils/generate-json"
   },
   "repository": {
     "type": "git",

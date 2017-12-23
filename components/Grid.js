@@ -3,6 +3,7 @@ import Fullscreen from 'react-full-screen'
 import KeyHandler, {KEYPRESS} from 'react-key-handler'
 import Button from './Button'
 import Cell from './Cell'
+const Images = require('../static/data/images.json')
 const shuffle = require('knuth-shuffle').knuthShuffle
 
 function reset () {
@@ -17,14 +18,8 @@ function reset () {
 }
 
 function getImages () {
-  return [
-    '/static/images/mistletoe.jpg',
-    '/static/images/donkey.jpg',
-    '/static/images/askepott.jpg',
-    '/static/images/reven.jpg',
-    '/static/images/ribbe.jpg',
-    '/static/images/reinsdyr.jpg'
-  ]
+  const images = shuffle(Images.slice(0))
+  return images
 }
 
 export default class Grid extends React.Component {
