@@ -19,7 +19,11 @@ function reset () {
 function getImages () {
   return [
     '/static/images/mistletoe.jpg',
-    '/static/images/donkey.jpg'
+    '/static/images/donkey.jpg',
+    '/static/images/askepott.jpg',
+    '/static/images/reven.jpg',
+    '/static/images/ribbe.jpg',
+    '/static/images/reinsdyr.jpg'
   ]
 }
 
@@ -113,6 +117,9 @@ export default class Grid extends React.Component {
           <Button onClick={this.togglePlayState} src={this.state.isPlaying === true ? '/static/icons/pause.png' : '/static/icons/play.png'} />
           <Button onClick={this.fastForward} src={'/static/icons/fast_forward.png'} />
           {this.state.nowShowing < this.state.lastImage ? <Button onClick={this.nextImage} src={'/static/icons/next.png'} /> : null}
+        </div>
+        <div>
+          Bilde {this.state.nowShowing + 1} av {this.state.lastImage + 1}
         </div>
         <style jsx>
           {`
