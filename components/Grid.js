@@ -4,15 +4,19 @@ import KeyHandler, {KEYPRESS} from 'react-key-handler'
 import Button from './Button'
 import Cell from './Cell'
 const Images = require('../static/data/images.json')
-const shuffle = require('knuth-shuffle').knuthShuffle
+const { knuthShuffle: shuffle } = require('knuth-shuffle')
+const gpc = require('generate-pincode')
+const qs = require('querystring')
+const Gun = require('gun/gun')
+require('gun/lib/not.js')
+const gun = Gun('https://gundb.allthethings.win/gun')
 
 function reset () {
   const blocks = Array.apply(null, {length: 25}).map(Number.call, Number)
   const cells = shuffle(blocks.slice(0))
   return {
-    blocks: blocks,
     cells: cells,
-    clears: [],
+    clearFrom: 0,
     isPlaying: false
   }
 }
@@ -34,11 +38,39 @@ export default class Grid extends React.Component {
     this.fastForward = this.fastForward.bind(this)
     this.nextImage = this.nextImage.bind(this)
     this.prevImage = this.prevImage.bind(this)
+    this.syncState = this.syncState.bind(this)
   }
 
   async componentDidMount () {
     clearInterval(this.timer)
     this.timer = setInterval(this.clearCell, 1000)
+    const query = qs.parse(window.location.search.replace('?', ''))
+    const gamePin = query.gamePin || gpc(6)
+    gun.get(gamePin).not(key => {
+      console.log('no game found - let me create one for you')
+      const state = {
+        isPlaying: this.state.isPlaying,
+        imageUrl: this.state.imageUrl,
+        images: this.state.images.join('##'),
+        cells: this.state.cells.join('##')
+      }
+      gun.get(key).put(state)
+    })
+    this.setState({gamePin: gamePin})
+    gun.get(gamePin).on(state => {
+      Object.keys(state).filter(key => key !== '_').forEach(key => {
+        if (['images', 'cells'].includes(key)) {
+          const updatedState = {[key]: state[key].split('##')}
+          console.log(updatedState)
+          this.setState(updatedState)
+        } else {
+          const updatedState = {[key]: state[key]}
+          console.log(updatedState)
+          this.setState(updatedState)
+        }
+      })
+      console.log(`Synced state`)
+    })
   }
 
   toggleFullscreen () {
@@ -49,22 +81,24 @@ export default class Grid extends React.Component {
   resetRound () {
     clearInterval(this.timer)
     this.timer = setInterval(this.clearCell, 1000)
-    this.setState(reset())
+    const newState = reset()
+    this.setState(newState)
   }
 
   clearCell () {
     if (this.state.isPlaying === true) {
-      const cells = this.state.cells
-      const clears = this.state.clears
-      const cell = cells.pop()
-      clears.push(cell)
-      this.setState({cells: cells, clears: clears})
+      const clearFrom = this.state.clearFrom
+      const newValue = clearFrom + 1
+      this.setState({clearFrom: newValue})
     }
   }
 
   togglePlayState () {
     const playState = this.state.isPlaying
-    this.setState({isPlaying: playState !== true})
+    const status = playState !== true
+    const newState = {isPlaying: status}
+    this.setState(newState)
+    this.syncState(newState)
   }
 
   fastForward () {
@@ -93,6 +127,20 @@ export default class Grid extends React.Component {
     this.setState(Object.assign({nowShowing: newNum, imageUrl: imageUrl}, reset()))
   }
 
+  syncState (state) {
+    const gamePin = this.state.gamePin
+    Object.keys(state).forEach(key => {
+      if (['images', 'cells'].includes(key)) {
+        const val = state[key].join('##')
+        console.log(val)
+        gun.get(gamePin).get(key).put(val)
+      } else {
+        console.log(state[key])
+        gun.get(gamePin).get(key).put(state[key])
+      }
+    })
+  }
+
   render () {
     return (
       <Fullscreen enabled={this.state.isFull} onChange={isFull => this.setState({isFull})}>
@@ -103,7 +151,7 @@ export default class Grid extends React.Component {
         <KeyHandler keyEventName={KEYPRESS} keyValue='l' onKeyHandle={this.prevImage} />
         <KeyHandler keyEventName={KEYPRESS} keyValue='s' onKeyHandle={this.fastForward} />
         <div className='grid'>
-          {this.state.blocks.map((num, index) => (<Cell key={num} className={this.state.clears.includes(index) ? 'clear' : 'cell'} />))}
+          {this.state.cells.map((num, index) => (<Cell key={num} className={this.state.clearFrom > num ? 'clear' : 'cell'} />))}
         </div>
         <div className={'menu'}>
           <Button onClick={this.toggleFullscreen} src={this.state.isFull === true ? '/static/icons/fullscreen_exit.png' : '/static/icons/fullscreen.png'} />
@@ -114,7 +162,7 @@ export default class Grid extends React.Component {
           {this.state.nowShowing < this.state.lastImage ? <Button onClick={this.nextImage} src={'/static/icons/next.png'} /> : null}
         </div>
         <div>
-          Bilde {this.state.nowShowing + 1} av {this.state.lastImage + 1}
+          Bilde {this.state.nowShowing + 1} av {this.state.lastImage + 1} Game pin: {this.state.gamePin}
         </div>
         <style jsx>
           {`
