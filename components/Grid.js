@@ -26,6 +26,14 @@ function getImages () {
   return images
 }
 
+function fixSyncOut (data) {
+  return Array.isArray(data) ? data.join('###') : data
+}
+
+function fixSyncIn (data) {
+  return /###/.test(data) ? data.split('###') : data
+}
+
 export default class Grid extends React.Component {
   constructor (props) {
     super(props)
@@ -49,25 +57,19 @@ export default class Grid extends React.Component {
     gun.get(gamePin).not(key => {
       console.log('no game found - let me create one for you')
       const state = {
-        isPlaying: this.state.isPlaying,
-        imageUrl: this.state.imageUrl,
-        images: this.state.images.join('##'),
-        cells: this.state.cells.join('##')
+        isPlaying: fixSyncOut(this.state.isPlaying),
+        imageUrl: fixSyncOut(this.state.imageUrl),
+        images: fixSyncOut(this.state.images),
+        cells: fixSyncOut(this.state.cells)
       }
       gun.get(key).put(state)
     })
     this.setState({gamePin: gamePin})
     gun.get(gamePin).on(state => {
       Object.keys(state).filter(key => key !== '_').forEach(key => {
-        if (['images', 'cells'].includes(key)) {
-          const updatedState = {[key]: state[key].split('##')}
-          console.log(updatedState)
-          this.setState(updatedState)
-        } else {
-          const updatedState = {[key]: state[key]}
-          console.log(updatedState)
-          this.setState(updatedState)
-        }
+        const updatedState = {[key]: fixSyncIn(state[key])}
+        console.log(updatedState)
+        this.setState(updatedState)
       })
       console.log(`Synced state`)
     })
@@ -83,6 +85,11 @@ export default class Grid extends React.Component {
     this.timer = setInterval(this.clearCell, 1000)
     const newState = reset()
     this.setState(newState)
+    let newSyncState = {}
+    Object.keys(newState).forEach(key => {
+      newSyncState[key] = fixSyncOut(newState[key])
+    })
+    this.syncState(newSyncState)
   }
 
   clearCell () {
@@ -96,7 +103,11 @@ export default class Grid extends React.Component {
   togglePlayState () {
     const playState = this.state.isPlaying
     const status = playState !== true
-    const newState = {isPlaying: status}
+    const clearFrom = this.state.clearFrom
+    const newState = {
+      isPlaying: status,
+      clearFrom: clearFrom
+    }
     this.setState(newState)
     this.syncState(newState)
   }
@@ -130,14 +141,9 @@ export default class Grid extends React.Component {
   syncState (state) {
     const gamePin = this.state.gamePin
     Object.keys(state).forEach(key => {
-      if (['images', 'cells'].includes(key)) {
-        const val = state[key].join('##')
-        console.log(val)
-        gun.get(gamePin).get(key).put(val)
-      } else {
-        console.log(state[key])
-        gun.get(gamePin).get(key).put(state[key])
-      }
+      const val = fixSyncOut(state[key])
+      console.log(val)
+      gun.get(gamePin).get(key).put(val)
     })
   }
 
