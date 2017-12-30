@@ -12,10 +12,8 @@ require('gun/lib/not.js')
 const gun = Gun('https://gundb.allthethings.win/gun')
 
 function reset () {
-  const blocks = Array.apply(null, {length: 25}).map(Number.call, Number)
-  const cells = shuffle(blocks.slice(0))
   return {
-    cells: cells,
+    cells: shuffle(Array.apply(null, {length: 25}).map(Number.call, Number)),
     clearFrom: 0,
     isPlaying: false,
     timerSpeed: 1000
@@ -71,14 +69,12 @@ export default class Grid extends React.Component {
     gun.get(gamePin).on(state => {
       Object.keys(state).filter(key => key !== '_').forEach(key => {
         const updatedState = {[key]: fixSyncIn(state[key])}
-        console.log(updatedState)
         this.setState(updatedState)
-        if (key === 'timerSpeed') {
+        if (key === 'timerSpeed' && state[key] !== this.state.timerSpeed) {
           clearInterval(this.timer)
           this.timer = setInterval(this.clearCell, state[key])
         }
       })
-      console.log(`Synced state`)
     })
   }
 
@@ -161,7 +157,6 @@ export default class Grid extends React.Component {
     const gamePin = this.state.gamePin
     Object.keys(state).forEach(key => {
       const val = fixSyncOut(state[key])
-      console.log(val)
       gun.get(gamePin).get(key).put(val)
     })
   }
