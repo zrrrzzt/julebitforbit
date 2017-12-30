@@ -17,7 +17,8 @@ function reset () {
   return {
     cells: cells,
     clearFrom: 0,
-    isPlaying: false
+    isPlaying: false,
+    timerSpeed: 1000
   }
 }
 
@@ -51,7 +52,8 @@ export default class Grid extends React.Component {
 
   async componentDidMount () {
     clearInterval(this.timer)
-    this.timer = setInterval(this.clearCell, 1000)
+    const timerSpeed = this.state.timerSpeed
+    this.timer = setInterval(this.clearCell, timerSpeed)
     const query = qs.parse(window.location.search.replace('?', ''))
     const gamePin = query.gamePin || gpc(6)
     gun.get(gamePin).not(key => {
@@ -60,7 +62,8 @@ export default class Grid extends React.Component {
         isPlaying: fixSyncOut(this.state.isPlaying),
         imageUrl: fixSyncOut(this.state.imageUrl),
         images: fixSyncOut(this.state.images),
-        cells: fixSyncOut(this.state.cells)
+        cells: fixSyncOut(this.state.cells),
+        timerSpeed: timerSpeed
       }
       gun.get(key).put(state)
     })
@@ -70,6 +73,10 @@ export default class Grid extends React.Component {
         const updatedState = {[key]: fixSyncIn(state[key])}
         console.log(updatedState)
         this.setState(updatedState)
+        if (key === 'timerSpeed') {
+          clearInterval(this.timer)
+          this.timer = setInterval(this.clearCell, state[key])
+        }
       })
       console.log(`Synced state`)
     })
@@ -82,8 +89,8 @@ export default class Grid extends React.Component {
 
   resetRound () {
     clearInterval(this.timer)
-    this.timer = setInterval(this.clearCell, 1000)
     const newState = reset()
+    this.timer = setInterval(this.clearCell, newState.timerSpeed)
     this.setState(newState)
     let newSyncState = {}
     Object.keys(newState).forEach(key => {
@@ -114,28 +121,40 @@ export default class Grid extends React.Component {
 
   fastForward () {
     clearInterval(this.timer)
-    this.timer = setInterval(this.clearCell, 100)
-    this.setState({isPlaying: true})
+    const timerSpeed = 100
+    const clearFrom = this.state.clearFrom
+    this.timer = setInterval(this.clearCell, timerSpeed)
+    const newState = {
+      timerSpeed: timerSpeed,
+      clearFrom: clearFrom,
+      isPlaying: true
+    }
+    this.setState(newState)
+    this.syncState(newState)
   }
 
   nextImage () {
+    clearInterval(this.timer)
     const images = this.state.images
     const nowShowing = this.state.nowShowing
     const newNum = nowShowing + 1
     const imageUrl = images[newNum]
-    clearInterval(this.timer)
-    this.timer = setInterval(this.clearCell, 1000)
-    this.setState(Object.assign({nowShowing: newNum, imageUrl: imageUrl}, reset()))
+    const newState = Object.assign({}, {nowShowing: newNum, imageUrl: imageUrl}, reset())
+    this.setState(newState)
+    this.syncState(newState)
+    this.timer = setInterval(this.clearCell, newState.timerSpeed)
   }
 
   prevImage () {
+    clearInterval(this.timer)
     const images = this.state.images
     const nowShowing = this.state.nowShowing
     const newNum = nowShowing - 1
     const imageUrl = images[newNum]
-    clearInterval(this.timer)
-    this.timer = setInterval(this.clearCell, 1000)
-    this.setState(Object.assign({nowShowing: newNum, imageUrl: imageUrl}, reset()))
+    const newState = Object.assign({}, {nowShowing: newNum, imageUrl: imageUrl}, reset())
+    this.setState(newState)
+    this.syncState(newState)
+    this.timer = setInterval(this.clearCell, newState.timerSpeed)
   }
 
   syncState (state) {
