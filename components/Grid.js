@@ -49,9 +49,7 @@ export default class Grid extends React.Component {
   }
 
   async componentDidMount () {
-    clearInterval(this.timer)
     const timerSpeed = this.state.timerSpeed
-    this.timer = setInterval(this.clearCell, timerSpeed)
     const query = qs.parse(window.location.search.replace('?', ''))
     const gamePin = query.gamePin || gpc(6)
     gun.get(gamePin).not(key => {
@@ -67,15 +65,14 @@ export default class Grid extends React.Component {
     })
     this.setState({gamePin: gamePin})
     gun.get(gamePin).on(state => {
-      Object.keys(state).filter(key => key !== '_').forEach(key => {
-        const updatedState = {[key]: fixSyncIn(state[key])}
-        this.setState(updatedState)
-        if (key === 'timerSpeed' && state[key] !== this.state.timerSpeed) {
-          clearInterval(this.timer)
-          this.timer = setInterval(this.clearCell, state[key])
-        }
-      })
-    })
+      if (state !== undefined) {
+        Object.keys(state).filter(key => key !== '_').forEach(key => {
+          const updatedState = {[key]: fixSyncIn(state[key])}
+          this.setState(updatedState)
+        })
+      }
+    }, true)
+    this.clearCell()
   }
 
   toggleFullscreen () {
@@ -84,9 +81,7 @@ export default class Grid extends React.Component {
   }
 
   resetRound () {
-    clearInterval(this.timer)
     const newState = reset()
-    this.timer = setInterval(this.clearCell, newState.timerSpeed)
     this.setState(newState)
     let newSyncState = {}
     Object.keys(newState).forEach(key => {
@@ -101,6 +96,7 @@ export default class Grid extends React.Component {
       const newValue = clearFrom + 1
       this.setState({clearFrom: newValue})
     }
+    setTimeout(this.clearCell, this.state.timerSpeed)
   }
 
   togglePlayState () {
@@ -116,10 +112,8 @@ export default class Grid extends React.Component {
   }
 
   fastForward () {
-    clearInterval(this.timer)
     const timerSpeed = 100
     const clearFrom = this.state.clearFrom
-    this.timer = setInterval(this.clearCell, timerSpeed)
     const newState = {
       timerSpeed: timerSpeed,
       clearFrom: clearFrom,
@@ -130,7 +124,6 @@ export default class Grid extends React.Component {
   }
 
   nextImage () {
-    clearInterval(this.timer)
     const images = this.state.images
     const nowShowing = this.state.nowShowing
     const newNum = nowShowing + 1
@@ -138,11 +131,9 @@ export default class Grid extends React.Component {
     const newState = Object.assign({}, {nowShowing: newNum, imageUrl: imageUrl}, reset())
     this.setState(newState)
     this.syncState(newState)
-    this.timer = setInterval(this.clearCell, newState.timerSpeed)
   }
 
   prevImage () {
-    clearInterval(this.timer)
     const images = this.state.images
     const nowShowing = this.state.nowShowing
     const newNum = nowShowing - 1
@@ -150,7 +141,6 @@ export default class Grid extends React.Component {
     const newState = Object.assign({}, {nowShowing: newNum, imageUrl: imageUrl}, reset())
     this.setState(newState)
     this.syncState(newState)
-    this.timer = setInterval(this.clearCell, newState.timerSpeed)
   }
 
   syncState (state) {
