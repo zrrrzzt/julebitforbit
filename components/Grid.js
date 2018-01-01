@@ -82,7 +82,6 @@ export default class Grid extends React.Component {
 
   resetRound () {
     const newState = reset()
-    this.setState(newState)
     let newSyncState = {}
     Object.keys(newState).forEach(key => {
       newSyncState[key] = fixSyncOut(newState[key])
@@ -107,7 +106,6 @@ export default class Grid extends React.Component {
       isPlaying: status,
       clearFrom: clearFrom
     }
-    this.setState(newState)
     this.syncState(newState)
   }
 
@@ -119,7 +117,6 @@ export default class Grid extends React.Component {
       clearFrom: clearFrom,
       isPlaying: true
     }
-    this.setState(newState)
     this.syncState(newState)
   }
 
@@ -129,7 +126,6 @@ export default class Grid extends React.Component {
     const newNum = nowShowing + 1
     const imageUrl = images[newNum]
     const newState = Object.assign({}, {nowShowing: newNum, imageUrl: imageUrl}, reset())
-    this.setState(newState)
     this.syncState(newState)
   }
 
@@ -139,7 +135,6 @@ export default class Grid extends React.Component {
     const newNum = nowShowing - 1
     const imageUrl = images[newNum]
     const newState = Object.assign({}, {nowShowing: newNum, imageUrl: imageUrl}, reset())
-    this.setState(newState)
     this.syncState(newState)
   }
 
