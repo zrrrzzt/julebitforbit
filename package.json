@@ -14,7 +14,8 @@
     "coverage": "nyc ava",
     "coveralls": "nyc ava && nyc report --reporter=lcov && cat coverage/lcov.info | coveralls",
     "standard-fix": "standard --fix",
-    "generate-json": "node utils/generate-json"
+    "generate-json": "node utils/generate-json",
+    "refresh": "rm -rf node_modules && rm package-lock.json && npm install"
   },
   "repository": {
     "type": "git",
@@ -46,5 +47,8 @@
   },
   "now": {
     "alias": "bitforbit.allthethings.win"
+  },
+  "engines": {
+    "node": ">=8.9.4"
   }
 }

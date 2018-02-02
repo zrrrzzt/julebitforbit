@@ -6,7 +6,6 @@ import Cell from './Cell'
 const Images = require('../static/data/images.json')
 const { knuthShuffle: shuffle } = require('knuth-shuffle')
 const gpc = require('generate-pincode')
-const qs = require('querystring')
 const Gun = require('gun/gun')
 require('gun/lib/not.js')
 const gun = Gun('https://gundb.allthethings.win/gun')
@@ -37,7 +36,8 @@ export default class Grid extends React.Component {
   constructor (props) {
     super(props)
     const images = getImages()
-    this.state = (Object.assign({}, {isFull: false, images: images, nowShowing: 0, lastImage: images.length - 1, imageUrl: images[0]}, reset()))
+    const gamePin = gpc(6)
+    this.state = (Object.assign({}, {gamePin: gamePin, isFull: false, images: images, nowShowing: 0, lastImage: images.length - 1, imageUrl: images[0]}, reset()))
     this.clearCell = this.clearCell.bind(this)
     this.togglePlayState = this.togglePlayState.bind(this)
     this.toggleFullscreen = this.toggleFullscreen.bind(this)
@@ -46,24 +46,29 @@ export default class Grid extends React.Component {
     this.nextImage = this.nextImage.bind(this)
     this.prevImage = this.prevImage.bind(this)
     this.syncState = this.syncState.bind(this)
+    this.setGamePin = this.setGamePin.bind(this)
+    this.initGame = this.initGame.bind(this)
   }
 
   async componentDidMount () {
-    const timerSpeed = this.state.timerSpeed
-    const query = qs.parse(window.location.search.replace('?', ''))
-    const gamePin = query.gamePin || gpc(6)
+    const gamePin = this.state.gamePin
+    this.initGame(gamePin)
+    this.clearCell()
+  }
+
+  initGame (gamePin) {
     gun.get(gamePin).not(key => {
-      console.log('no game found - let me create one for you')
       const state = {
         isPlaying: fixSyncOut(this.state.isPlaying),
         imageUrl: fixSyncOut(this.state.imageUrl),
         images: fixSyncOut(this.state.images),
         cells: fixSyncOut(this.state.cells),
-        timerSpeed: timerSpeed
+        timerSpeed: this.state.timerSpeed
       }
       gun.get(key).put(state)
     })
-    this.setState({gamePin: gamePin})
+    // Cleanup
+    gun.get(gamePin).off()
     gun.get(gamePin).on(state => {
       if (state !== undefined) {
         Object.keys(state).filter(key => key !== '_').forEach(key => {
@@ -72,7 +77,17 @@ export default class Grid extends React.Component {
         })
       }
     }, true)
-    this.clearCell()
+  }
+
+  setGamePin (e) {
+    e.preventDefault()
+    const gamePinField = document.getElementById('enterGamePin')
+    const gamePin = gamePinField.value.trim()
+    this.setState({
+      gamePin: gamePin
+    })
+    gamePinField.value = ''
+    this.initGame(gamePin)
   }
 
   toggleFullscreen () {
@@ -169,6 +184,11 @@ export default class Grid extends React.Component {
         <div>
           Bilde {this.state.nowShowing + 1} av {this.state.lastImage + 1} Game pin: {this.state.gamePin}
         </div>
+        <div>
+          <form onSubmit={this.setGamePin}>
+            <input type='text' name='enterGamePin' id='enterGamePin' placeholder='Enter Game pin to join another game' />
+          </form>
+        </div>
         <style jsx>
           {`
             .grid {
@@ -187,6 +207,12 @@ export default class Grid extends React.Component {
               display: flex;
               align-items: center;
               justify-content: center;
+            }
+            input {
+              width: 400px;
+              height: 40px;
+              margin: 10px;
+              font-size: 20px;
             }
           `}
         </style>
