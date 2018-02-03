@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import Fullscreen from 'react-full-screen'
 import KeyHandler, {KEYPRESS} from 'react-key-handler'
 import Button from './Button'
@@ -32,7 +32,7 @@ function fixSyncIn (data) {
   return /###/.test(data) ? data.split('###') : data
 }
 
-export default class Grid extends React.Component {
+export default class Grid extends Component {
   constructor (props) {
     super(props)
     const images = getImages()
@@ -209,10 +209,11 @@ export default class Grid extends React.Component {
               justify-content: center;
             }
             input {
-              width: 400px;
+              width: 350px;
               height: 40px;
               margin: 10px;
               font-size: 20px;
+              text-align: center;
             }
           `}
         </style>
