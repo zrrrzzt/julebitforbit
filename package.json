@@ -36,7 +36,7 @@
     "standard": "10.0.3"
   },
   "dependencies": {
-    "generate-pincode": "5.0.0",
+    "generate-pincode": "5.0.1",
     "gun": "0.9.91",
     "knuth-shuffle": "1.0.8",
     "next": "4.2.3",
