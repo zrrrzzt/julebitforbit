@@ -39,7 +39,7 @@
     "generate-pincode": "5.0.1",
     "gun": "0.9.98",
     "knuth-shuffle": "1.0.8",
-    "next": "4.2.3",
+    "next": "5.1.0",
     "react": "16.2.0",
     "react-dom": "16.2.0",
     "react-full-screen": "0.2.2",
