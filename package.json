@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "generate-pincode": "5.0.1",
-    "gun": "0.9.99",
+    "gun": "0.9.991",
     "knuth-shuffle": "1.0.8",
     "next": "5.1.0",
     "react": "16.2.0",
