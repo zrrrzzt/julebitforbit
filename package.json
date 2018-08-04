@@ -43,7 +43,7 @@
     "react": "16.4.2",
     "react-dom": "16.4.2",
     "react-full-screen": "0.2.2",
-    "react-key-handler": "1.0.1"
+    "react-key-handler": "1.1.0"
   },
   "now": {
     "alias": "bitforbit.allthethings.win"
