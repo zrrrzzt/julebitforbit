@@ -42,7 +42,7 @@
     "next": "6.1.1",
     "react": "16.4.2",
     "react-dom": "16.4.2",
-    "react-full-screen": "0.2.2",
+    "react-full-screen": "0.2.3",
     "react-key-handler": "1.1.0"
   },
   "now": {
