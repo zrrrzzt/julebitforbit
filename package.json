@@ -40,8 +40,8 @@
     "gun": "0.9.99997",
     "knuth-shuffle": "1.0.8",
     "next": "7.0.2",
-    "react": "16.6.1",
-    "react-dom": "16.6.1",
+    "react": "16.6.3",
+    "react-dom": "16.6.3",
     "react-full-screen": "0.2.3",
     "react-key-handler": "1.1.0"
   },
