@@ -9,7 +9,7 @@
     "start": "next start",
     "export": "next build && next export",
     "deploy": "npm test && next build && next export && now --static out/ --name julebitforbit && now alias",
-    "test": "standard && nsp check && ava",
+    "test": "standard && npm audit && ava",
     "test-offline": "standard && ava",
     "coverage": "nyc ava",
     "coveralls": "nyc ava && nyc report --reporter=lcov && cat coverage/lcov.info | coveralls",
@@ -31,7 +31,6 @@
   "devDependencies": {
     "ava": "0.25.0",
     "coveralls": "3.0.2",
-    "nsp": "3.2.1",
     "nyc": "13.1.0",
     "standard": "12.0.1"
   },
