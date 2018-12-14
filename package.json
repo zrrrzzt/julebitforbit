@@ -49,6 +49,6 @@
     "alias": "bitforbit.allthethings.win"
   },
   "engines": {
-    "node": ">=8.9.4"
+    "node": ">=10.14.1"
   }
 }
