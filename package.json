@@ -3,6 +3,7 @@
   "version": "1.0.1",
   "description": "Julekonkurranse i bit for bit ånd",
   "main": "index.js",
+  "private": true,
   "scripts": {
     "build": "next build",
     "dev": "next",
@@ -21,6 +22,19 @@
     "type": "git",
     "url": "git+https://github.com/zrrrzzt/julebitforbit.git"
   },
+  "standard": {
+    "ignore": [
+      "/static/*.js"
+    ],
+    "parser": "babel-eslint",
+    "parserOptions": {
+      "ecmaFeatures": {
+        "experimentalObjectRestSpread": true,
+        "jsx": true
+      },
+      "sourceType": "module"
+    }
+  },
   "keywords": [],
   "author": "Geir Gåsodden <geir.gasodden@pythonia.no> (https://github.com/zrrrzzt)",
   "license": "MIT",
@@ -35,6 +49,7 @@
     "standard": "12.0.1"
   },
   "dependencies": {
+    "babel-eslint": "10.0.1",
     "generate-pincode": "5.0.2",
     "gun": "0.9.999992",
     "knuth-shuffle": "1.0.8",
