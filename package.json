@@ -63,6 +63,6 @@
     "alias": "bitforbit.allthethings.win"
   },
   "engines": {
-    "node": ">=10.14.1"
+    "node": ">=10.15.1"
   }
 }
