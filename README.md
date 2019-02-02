@@ -1,6 +1,5 @@
 [![Build Status](https://travis-ci.org/zrrrzzt/julebitforbit.svg?branch=master)](https://travis-ci.org/zrrrzzt/julebitforbit)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://github.com/feross/standard)
-[![Greenkeeper badge](https://badges.greenkeeper.io/zrrrzzt/julebitforbit.svg)](https://greenkeeper.io/)
 
 # julebitforbit
 
@@ -48,5 +47,3 @@ For å sette opp din egen server med egne bilder gjør du som følger:
 ## License
 
 [MIT](LICENSE)
-
-![Robohash image of julebitforbit](https://robots.kebabstudios.party/julebitforbit.png "Robohash image of julebitforbit")
