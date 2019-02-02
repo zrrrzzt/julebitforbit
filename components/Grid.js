@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Fullscreen from 'react-full-screen'
-import KeyHandler, {KEYPRESS} from 'react-key-handler'
+import KeyHandler, { KEYPRESS } from 'react-key-handler'
 import Button from './Button'
 import Cell from './Cell'
 const Images = require('../static/data/images.json')
@@ -12,7 +12,7 @@ const gun = Gun('https://gundb.allthethings.win/gun')
 
 function reset () {
   return {
-    cells: shuffle(Array.apply(null, {length: 25}).map(Number.call, Number)),
+    cells: shuffle(Array.apply(null, { length: 25 }).map(Number.call, Number)),
     clearFrom: 0,
     isPlaying: false,
     timerSpeed: 1000
@@ -37,7 +37,7 @@ export default class Grid extends Component {
     super(props)
     const images = getImages()
     const gamePin = gpc(6)
-    this.state = (Object.assign({}, {gamePin: gamePin, isFull: false, images: images, nowShowing: 0, lastImage: images.length - 1, imageUrl: images[0]}, reset()))
+    this.state = (Object.assign({}, { gamePin: gamePin, isFull: false, images: images, nowShowing: 0, lastImage: images.length - 1, imageUrl: images[0] }, reset()))
     this.clearCell = this.clearCell.bind(this)
     this.togglePlayState = this.togglePlayState.bind(this)
     this.toggleFullscreen = this.toggleFullscreen.bind(this)
@@ -72,7 +72,7 @@ export default class Grid extends Component {
     gun.get(gamePin).on(state => {
       if (state !== undefined) {
         Object.keys(state).filter(key => key !== '_').forEach(key => {
-          const updatedState = {[key]: fixSyncIn(state[key])}
+          const updatedState = { [key]: fixSyncIn(state[key]) }
           this.setState(updatedState)
         })
       }
@@ -92,7 +92,7 @@ export default class Grid extends Component {
 
   toggleFullscreen () {
     const isFull = this.state.isFull
-    this.setState({isFull: !isFull})
+    this.setState({ isFull: !isFull })
   }
 
   resetRound () {
@@ -108,7 +108,7 @@ export default class Grid extends Component {
     if (this.state.isPlaying === true) {
       const clearFrom = this.state.clearFrom
       const newValue = clearFrom + 1
-      this.setState({clearFrom: newValue})
+      this.setState({ clearFrom: newValue })
     }
     setTimeout(this.clearCell, this.state.timerSpeed)
   }
@@ -140,7 +140,7 @@ export default class Grid extends Component {
     const nowShowing = this.state.nowShowing
     const newNum = nowShowing + 1
     const imageUrl = images[newNum]
-    const newState = Object.assign({}, {nowShowing: newNum, imageUrl: imageUrl}, reset())
+    const newState = Object.assign({}, { nowShowing: newNum, imageUrl: imageUrl }, reset())
     this.syncState(newState)
   }
 
@@ -149,7 +149,7 @@ export default class Grid extends Component {
     const nowShowing = this.state.nowShowing
     const newNum = nowShowing - 1
     const imageUrl = images[newNum]
-    const newState = Object.assign({}, {nowShowing: newNum, imageUrl: imageUrl}, reset())
+    const newState = Object.assign({}, { nowShowing: newNum, imageUrl: imageUrl }, reset())
     this.syncState(newState)
   }
 
@@ -163,7 +163,7 @@ export default class Grid extends Component {
 
   render () {
     return (
-      <Fullscreen enabled={this.state.isFull} onChange={isFull => this.setState({isFull})}>
+      <Fullscreen enabled={this.state.isFull} onChange={isFull => this.setState({ isFull })}>
         <KeyHandler keyEventName={KEYPRESS} keyValue='f' onKeyHandle={this.toggleFullscreen} />
         <KeyHandler keyEventName={KEYPRESS} keyValue='p' onKeyHandle={this.togglePlayState} />
         <KeyHandler keyEventName={KEYPRESS} keyValue='r' onKeyHandle={this.resetRound} />
