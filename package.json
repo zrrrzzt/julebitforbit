@@ -56,7 +56,7 @@
     "next": "8.0.1",
     "react": "16.8.3",
     "react-dom": "16.8.3",
-    "react-full-screen": "0.2.3",
+    "react-full-screen": "0.2.4",
     "react-key-handler": "1.1.0"
   },
   "now": {
