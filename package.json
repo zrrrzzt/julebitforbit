@@ -51,7 +51,7 @@
   "dependencies": {
     "babel-eslint": "10.0.1",
     "generate-pincode": "5.0.3",
-    "gun": "0.9.9999991",
+    "gun": "0.2019.331",
     "knuth-shuffle": "1.0.8",
     "next": "8.0.3",
     "react": "16.8.4",
