@@ -54,8 +54,8 @@
     "gun": "0.2020.116",
     "knuth-shuffle": "1.0.8",
     "next": "9.2.2",
-    "react": "16.12.0",
-    "react-dom": "16.12.0",
+    "react": "16.13.0",
+    "react-dom": "16.13.0",
     "react-full-screen": "0.2.4",
     "react-key-handler": "1.1.0"
   },
